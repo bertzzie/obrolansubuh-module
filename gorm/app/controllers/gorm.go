@@ -75,20 +75,22 @@ func InitDB() {
 		dbm.Create(&typeWriter)
 
 		admin := models.Contributor{
-			Name:  "Default Admin",
-			Email: "admin@obrolansubuh.com",
-			About: "Default Admin ObrolanSubuh.com",
-			Photo: "/public/img/default-user.png",
-			Type:  &typeAdmin,
+			Name:   "Default Admin",
+			Handle: "DefaultAdmin",
+			Email:  "admin@obrolansubuh.com",
+			About:  "Default Admin ObrolanSubuh.com",
+			Photo:  "/public/img/default-user.png",
+			Type:   &typeAdmin,
 		}
 		admin.SetPassword("admin@obrolansubuh.com")
 
 		writer := models.Contributor{
-			Name:  "Default Writer",
-			Email: "writer@obrolansubuh.com",
-			About: "Default Writer ObrolanSubuh.com",
-			Photo: "/public/img/default-user.png",
-			Type:  &typeWriter,
+			Name:   "Default Writer",
+			Handle: "DefaultWriter",
+			Email:  "writer@obrolansubuh.com",
+			About:  "Default Writer ObrolanSubuh.com",
+			Photo:  "/public/img/default-user.png",
+			Type:   &typeWriter,
 		}
 		writer.SetPassword("writer@obrolansubuh.com")
 
@@ -101,6 +103,14 @@ func (gc *GormController) GetContributor(email string) (*models.Contributor, err
 	contributor := &models.Contributor{}
 
 	tx := gc.Trx.Preload("Type").Where("email = ?", email).First(&contributor)
+
+	return contributor, tx.Error
+}
+
+func (gc *GormController) GetContributorByHandle(handle string) (*models.Contributor, error) {
+	contributor := &models.Contributor{}
+
+	tx := gc.Trx.Preload("Type").Where("handle = ?", handle).First(&contributor)
 
 	return contributor, tx.Error
 }
